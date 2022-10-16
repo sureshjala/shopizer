@@ -1,0 +1,18 @@
+ {
+    agent pipeline{ label 'NODE_WITH_KEY' }
+    triggers {
+    pollSCM '30 17 * * *'
+    }
+    stages{
+        stage('git clone') {
+          steps {
+            git branch: 'master','url': 'https://github.com/shopizer-ecommerce/shopizer.git'
+            }
+        }
+        stage('building shopizer') {
+          steps {
+            sh 'mvn package'
+            }
+        }  
+    }
+}
