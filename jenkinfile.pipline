@@ -1,7 +1,7 @@
 pipeline {
     agent { label 'NODE_WITH_KEY' }
     triggers {
-    pollSCM '0 0 23 * * *'
+    pollSCM '30 17 * * *'
     }
     stages{
         stage('git clone') {
