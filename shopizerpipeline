@@ -12,7 +12,7 @@ pipeline {
         stage ('merging develop branch to release') {
             steps {
                 sh 'git checkout develop '
-                sh 'git merge --no-ff release' 
+                sh 'git merge --no-ff release ' 
                 sh 'git add .'
                 sh 'git commit -m "merged dev'
             }
