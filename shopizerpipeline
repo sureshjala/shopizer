@@ -15,7 +15,8 @@ pipeline {
                 sh 'git merge --no-ff origin/release ' 
                 sh 'git add .'
                 sh 'git commit -m "merged dev"'
-                sh 'git push'
+                sh 'git checkout release '
+                sh 'git merge --no-ff origin/master '
             }
         }
     }
