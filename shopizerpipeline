@@ -9,7 +9,7 @@ pipeline {
             git branch: 'shopizer','url': 'https://github.com/sureshjala/shopizer.git'
             }
         }
-        stage (merging develop branch to release) {
+        stage ('merging develop branch to release') {
             steps {
                 sh 'git checkout develop '
                 sh 'git merge --no-ff origin/release ' 
