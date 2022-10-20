@@ -1,0 +1,48 @@
+pipeline { 
+    agent { label 'SHOPIZER' }
+    parameters {
+        string(name: 'MAVEN_GOAL', defaultValue: 'package', description: 'maven goal')
+        string(name: 'MAVEN_GOAL', defaultValue: 'clean install', description: 'maven goal')
+    }
+    stages{
+        stage('git clone') {
+            steps {
+             git branch: 'master','url': 'https://github.com/shopizer-ecommerce/shopizer.git'
+            }
+        }
+        stage('building shopizer') {
+            steps {
+              sh "/opt/apache-maven-3.8.6/bin/mvn ${params.MAVEN_GOAL}"
+            }
+        } 
+        stage ('Artifactory configuration') {
+            steps {
+                rtServer (
+                    id: "J_FROG_ID",
+                    url: "https://suresh33.jfrog.io/",
+                    credentialsId: "J_FROG_CREDENTIAL"
+                )
+
+                rtMavenDeployer (
+                    id: "MAVEN_DEPLOYER",
+                    serverId: "J_FROG_ID",
+                    releaseRepo: 'suresh-libs-release-local',
+                    snapshotRepo: 'suresh-libs-snapshot-local'
+                )
+                rtMavenRun (
+                    tool: 'MAVEN_3.8.6',
+                    pom: 'pom.xml',
+                    goals: 'clean install',
+                    deployerId: 'spc-deployer',
+                )
+            }
+         }
+        stage ('Publish build info') {
+            steps {
+                rtPublishBuildInfo (
+                    serverId: "JFROG_ID"
+                )
+            }
+        }
+    }
+}
